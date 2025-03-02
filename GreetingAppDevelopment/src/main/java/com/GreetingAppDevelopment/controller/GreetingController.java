@@ -1,10 +1,10 @@
-package com.GreetingAppDevelopment;
+package com.GreetingAppDevelopment.controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
 
 @RestController
-@RequestMapping("/greeting")
+@RequestMapping("/greeting/v1")
 public class GreetingController {
 
     @GetMapping
