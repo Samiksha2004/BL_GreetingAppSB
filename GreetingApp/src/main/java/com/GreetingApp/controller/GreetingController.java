@@ -2,39 +2,35 @@ package com.GreetingApp.controller;
 
 import com.GreetingApp.model.Greeting;
 import com.GreetingApp.repository.GreetingRepository;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
+
 @RestController
 @RequestMapping("/greetings")
 public class GreetingController {
 
     private final GreetingRepository greetingRepository;
 
+    @Autowired
     public GreetingController(GreetingRepository greetingRepository) {
         this.greetingRepository = greetingRepository;
     }
 
+    // Create a new greeting (POST)
     @PostMapping
-    public Greeting addGreeting(@RequestBody Greeting greeting) {
-        return greetingRepository.save(greeting);
+    public ResponseEntity<Greeting> createGreeting(@RequestBody Greeting greeting) {
+        Greeting savedGreeting = greetingRepository.save(greeting);
+        return ResponseEntity.status(HttpStatus.CREATED).body(savedGreeting);
     }
 
+    // Get all greetings (GET)
     @GetMapping
-    public List<Greeting> getAllGreetings() {
-        return greetingRepository.findAll();
-    }
-//    @GetMapping("/{id}")
-//    public Greeting getGreetingById(@PathVariable Long id) {
-//        return greetingRepository.findById(id)
-//                .orElseThrow(() -> new RuntimeException("Greeting not found with ID: " + id));
-//    }
-    @GetMapping("/{id}")
-    public ResponseEntity<Greeting> getGreetingById(@PathVariable Long id) {
-        Optional<Greeting> greeting = greetingRepository.findById(id);
-        return greeting.map(ResponseEntity::ok)
-                .orElseGet(() -> ResponseEntity.notFound().build());
+    public ResponseEntity<List<Greeting>> getAllGreetings() {
+        List<Greeting> greetings = greetingRepository.findAll();
+        return ResponseEntity.ok(greetings);
     }
 }
